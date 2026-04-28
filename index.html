@@ -2,610 +2,910 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>FlashRide — Unified Fleet Management Platform</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#EFF6FF;color:#0A2472;min-height:100vh}
+:root{
+  --n9:#0A1628;--n8:#0A2472;--n7:#1565C0;--n6:#1E88E5;--n5:#42A5F5;--n4:#90CAF9;--n3:#BBDEFB;--n2:#E3F2FD;--n1:#F0F7FF;
+  --cy:#00B0FF;--r6:#E53935;--r1:#FFEBEE;--r2:#FFCDD2;--am:#F57F17;--am1:#FFF8E1;
+  --g7:#2E7D32;--g1:#E8F5E9;--card:#fff;--bg:#F0F7FF;--border:#BBDEFB;--muted:#546E7A;
+  --shadow:0 2px 14px rgba(10,36,114,.09);
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--n8);min-height:100vh}
 
-.header{background:linear-gradient(135deg,#0A2472 0%,#1565C0 100%);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 16px rgba(10,36,114,.25)}
-.logo{font-size:22px;font-weight:700;color:#fff;letter-spacing:2px}.logo span{color:#00B0FF}
-.header-sub{color:rgba(255,255,255,.6);font-size:11px;letter-spacing:1px;margin-top:2px}
-.live-pill{display:flex;align-items:center;gap:6px;background:rgba(0,176,255,.15);border:1px solid rgba(0,176,255,.3);color:#00B0FF;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600}
-.live-dot{width:7px;height:7px;border-radius:50%;background:#00B0FF;animation:blink 1.5s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+/* TOPBAR */
+.topbar{background:var(--n8);padding:0 20px;height:50px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(10,36,114,.3)}
+.logo{font-size:16px;font-weight:700;color:#fff;letter-spacing:1.5px}.logo span{color:var(--cy)}
+.tp-right{display:flex;align-items:center;gap:8px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#4CAF50;animation:pl 2s infinite}
+@keyframes pl{0%,100%{opacity:1}50%{opacity:.4}}
+.dtag{background:rgba(0,176,255,.15);border:1px solid rgba(0,176,255,.3);color:var(--cy);padding:3px 10px;border-radius:14px;font-size:11px;font-weight:600}
 
-/* ── ROLE SELECTION ── */
-.home-page{padding:40px 32px;max-width:1100px;margin:0 auto}
-.home-title{font-size:22px;font-weight:700;color:#0A2472;margin-bottom:6px}
-.home-sub{font-size:14px;color:#546E7A;margin-bottom:32px}
-.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.role-card{background:#fff;border-radius:14px;padding:28px 24px;box-shadow:0 4px 18px rgba(10,36,114,.09);cursor:pointer;transition:all .2s;border:2px solid transparent;text-align:center}
-.role-card:hover{border-color:#00B0FF;transform:translateY(-3px);box-shadow:0 8px 24px rgba(10,36,114,.15)}
-.role-icon{font-size:36px;margin-bottom:14px}
-.role-name{font-size:17px;font-weight:700;color:#0A2472;margin-bottom:8px}
-.role-desc{font-size:12px;color:#546E7A;line-height:1.6}
-.role-btn{margin-top:16px;background:#0A2472;color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:background .2s;width:100%}
-.role-btn:hover{background:#1565C0}
+/* ROLE SELECTION */
+#home-page{padding:36px 24px;max-width:1100px;margin:0 auto}
+.home-title{font-size:22px;font-weight:700;color:var(--n8);margin-bottom:6px}
+.home-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
+.role-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.role-card{background:#fff;border-radius:14px;padding:26px 20px;box-shadow:var(--shadow);cursor:pointer;border:2px solid transparent;text-align:center;transition:all .2s}
+.role-card:hover{border-color:var(--cy);transform:translateY(-3px);box-shadow:0 8px 24px rgba(10,36,114,.14)}
+.role-icon{font-size:34px;margin-bottom:12px}
+.role-name{font-size:16px;font-weight:700;color:var(--n8);margin-bottom:6px}
+.role-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.role-btn{background:var(--n8);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;width:100%;transition:background .2s}
+.role-btn:hover{background:var(--n7)}
 
-/* ── INNER PAGES ── */
-.inner-page{display:none;padding:0}
-.inner-page.active{display:block}
-
-.page-header{background:#0A2472;padding:14px 32px;display:flex;align-items:center;gap:16px}
-.back-btn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:background .2s}
+/* INNER PAGES */
+.inner-page{display:none}.inner-page.active{display:block}
+.page-header{background:var(--n8);padding:13px 24px;display:flex;align-items:center;gap:14px}
+.back-btn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer}
 .back-btn:hover{background:rgba(255,255,255,.25)}
-.page-header-title{font-size:16px;font-weight:700;color:#fff}
+.page-header-title{font-size:15px;font-weight:700;color:#fff}
+.kpi-live-badge{margin-left:auto;background:rgba(0,200,83,.15);border:1px solid rgba(0,200,83,.3);color:#4CAF50;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700}
 
-/* ── TABS inside portal ── */
-.portal-tabs{background:#fff;border-bottom:2px solid #DBEAFE;padding:0 32px;display:flex;box-shadow:0 2px 8px rgba(10,36,114,.06)}
-.ptab{padding:13px 22px;font-size:13px;font-weight:600;color:#546E7A;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
-.ptab:hover{color:#1565C0}.ptab.active{color:#0A2472;border-bottom-color:#00B0FF}
+/* TABS */
+.ptabs{background:#fff;border-bottom:2px solid var(--border);padding:0 24px;display:flex}
+.ptab{padding:12px 20px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
+.ptab:hover{color:var(--n7)}.ptab.active{color:var(--n8);border-bottom-color:var(--cy)}
+.ppage{display:none;padding:20px 24px}.ppage.active{display:block}
 
-.ppage{display:none;padding:24px 32px}.ppage.active{display:block}
+/* KPI STRIP */
+.kpi5{display:grid;grid-template-columns:repeat(5,1fr);gap:0;box-shadow:var(--shadow);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.kc{background:#fff;padding:14px 16px;border-top:3px solid var(--border);border-right:1px solid var(--border)}
+.kc:last-child{border-right:none}
+.kc.bad{border-top-color:var(--r6)}.kc.ok{border-top-color:var(--n7)}.kc.warn{border-top-color:var(--am)}
+.kl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.kv{font-size:26px;font-weight:700;line-height:1;margin:2px 0}
+.ks{font-size:9.5px;color:var(--muted);line-height:1.4}
+.kbadge{display:inline-block;margin-top:6px;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:8px}
+.kb-r{background:var(--r1);color:#C62828}.kb-b{background:var(--n2);color:var(--n7)}.kb-a{background:var(--am1);color:#8a4a00}
 
-/* ── KPI CARDS ── */
-.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}
-.kpi-card{background:#fff;border-radius:12px;padding:16px 18px;border-left:4px solid #1565C0;box-shadow:0 2px 12px rgba(10,36,114,.08)}
-.kpi-card.kpi-red{border-left-color:#E53935}
-.kpi-card.kpi-amber{border-left-color:#F57F17}
-.kpi-card.kpi-blue{border-left-color:#1565C0}
-.kpi-num-lbl{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#546E7A;margin-bottom:3px}
-.kpi-title{font-size:12px;font-weight:600;color:#0A2472;margin-bottom:3px}
-.kpi-value{font-size:28px;font-weight:700;color:#0A2472;line-height:1.1}
-.kpi-value .u{font-size:13px;font-weight:400;color:#546E7A;margin-left:2px}
-.kpi-formula{font-size:9px;color:#7C90B0;margin-top:4px;font-style:italic;line-height:1.4}
-.kpi-badge{margin-top:7px;display:inline-block;font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:10px}
-.badge-red{background:rgba(229,57,53,.1);color:#C62828}
-.badge-blue{background:rgba(21,101,192,.1);color:#0A2472}
-.badge-amber{background:rgba(245,127,23,.12);color:#8a4a00}
+/* FLEET TABLE */
+.fleet-wrap{background:#fff;border-radius:10px;box-shadow:var(--shadow);overflow:hidden}
+.fleet-toolbar{padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);background:var(--n1)}
+.fleet-toolbar input{padding:6px 12px;border:1px solid var(--border);border-radius:7px;font-size:12px;width:200px}
+.fleet-toolbar select{padding:6px 10px;border:1px solid var(--border);border-radius:7px;font-size:12px}
+.fleet-title{font-size:13px;font-weight:700;color:var(--n8);flex:1}
+.fleet-count{font-size:11px;color:var(--muted)}
+.ftbl{width:100%;border-collapse:collapse;font-size:12px}
+.ftbl th{background:var(--n8);color:#fff;padding:9px 12px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.ftbl td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.ftbl tr:last-child td{border-bottom:none}.ftbl tr:nth-child(even) td{background:var(--n1)}
+.ftbl tr:hover td{background:var(--n2)}
+.status-pill{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap}
+.sp-avail{background:var(--n2);color:var(--n7)}.sp-lowbatt{background:var(--r1);color:var(--r6)}
+.sp-mission{background:var(--am1);color:#8a4a00}.sp-inuse{background:#F3E5F5;color:#6A1B9A}
+.sp-done{background:var(--g1);color:var(--g7)}.sp-late{background:var(--r1);color:var(--r6)}
+.batt-bar-wrap{width:60px;height:8px;background:#eee;border-radius:4px;overflow:hidden;display:inline-block;vertical-align:middle}
+.batt-bar{height:100%;border-radius:4px}
+.trigger-btn{background:var(--n7);color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer}
+.trigger-btn:hover{background:var(--n8)}
+.trigger-btn.done{background:var(--g7);cursor:default}
 
-/* ── CHARTS ── */
-.charts-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
-.charts-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px;margin-bottom:18px}
-.chart-full{margin-bottom:18px}
-.ccard{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 2px 12px rgba(10,36,114,.07)}
-.ctitle{font-size:12px;font-weight:700;color:#0A2472;margin-bottom:2px}
-.csub{font-size:10px;color:#7C90B0;margin-bottom:12px}
+/* CHARTS */
+.charts-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.charts-full{margin-bottom:14px}
+.cc{background:#fff;border-radius:10px;padding:16px 18px;box-shadow:var(--shadow)}
+.ct{font-size:12px;font-weight:700;color:var(--n8);margin-bottom:2px}
+.cs{font-size:10px;color:var(--muted);margin-bottom:10px}
 
-/* ── TRIGGER ── */
-.trigger-box{background:#fff;border-radius:12px;padding:20px 22px;margin-bottom:18px;box-shadow:0 2px 12px rgba(10,36,114,.07)}
-.trigger-btn{background:#0A2472;color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s}
-.trigger-btn:hover{background:#1565C0}
-.trigger-log{margin-top:14px;display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto}
-.log-item{background:#EFF6FF;border-left:3px solid #00B0FF;padding:8px 12px;border-radius:6px;font-size:11px;color:#0A2472;animation:fadeIn .3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-.step-flow{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.step{background:#EFF6FF;border:1px solid #BBDEFB;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:600;color:#0A2472;text-align:center;min-width:90px}
-.step-arrow{color:#00B0FF;font-size:16px;font-weight:700}
+/* NOTIFICATION PANEL */
+.notif-panel{background:var(--am1);border:1px solid var(--am);border-radius:10px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.notif-icon{font-size:26px}
+.notif-text strong{display:block;font-size:13px;color:var(--n8);margin-bottom:3px}
+.notif-text span{font-size:12px;color:var(--muted)}
+.notif-accept{background:var(--n7);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
+.notif-accept:hover{background:var(--n8)}
 
-/* ── MISSIONS ── */
-.mission-list{display:flex;flex-direction:column;gap:10px}
-.mission-item{background:#fff;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(10,36,114,.06)}
-.mission-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.mission-dot.pending{background:#F57F17}.mission-dot.active{background:#00B0FF}.mission-dot.done{background:#42A5F5}
-.mission-info{flex:1}
-.mission-id{font-size:12px;font-weight:700;color:#0A2472}
-.mission-detail{font-size:11px;color:#546E7A}
-.mbtn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
-.mbtn.accept{background:#0A2472;color:#fff}.mbtn.accept:hover{background:#1565C0}
-.mbtn.complete{background:#1565C0;color:#fff}
-.mbtn.done-btn{background:#E3F2FD;color:#546E7A;cursor:default}
+/* MISSION FLOW */
+.mission-flow{background:#fff;border-radius:10px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.mf-header{background:var(--n8);padding:14px 18px;color:#fff}
+.mf-header-title{font-size:14px;font-weight:700}
+.mf-header-sub{font-size:11px;color:var(--n4)}
+.mf-body{padding:16px 18px}
+.steps-row{display:flex;gap:0;margin-bottom:18px;border-radius:8px;overflow:hidden}
+.step-item{flex:1;padding:8px 10px;text-align:center;background:var(--n1);border-right:1px solid var(--border);font-size:10px;font-weight:600;color:var(--muted);transition:all .3s}
+.step-item:last-child{border-right:none}
+.step-item.done{background:var(--g1);color:var(--g7)}
+.step-item.active{background:var(--n7);color:#fff}
+.step-num{font-size:14px;font-weight:700;display:block;margin-bottom:2px}
 
-/* ── COMPLIANCE TABLE ── */
-.zone-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(10,36,114,.07)}
-.zone-table th{background:#0A2472;color:#fff;padding:10px 14px;font-size:11px;text-align:left}
-.zone-table td{padding:9px 14px;font-size:11px;border-bottom:1px solid #DBEAFE}
-.zone-table tr:last-child td{border-bottom:none}.zone-table tr:hover td{background:#EFF6FF}
-.pill{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
-.pill.ok{background:rgba(66,165,245,.15);color:#0A2472}
-.pill.warn{background:rgba(245,127,23,.15);color:#8a4a00}
-.pill.fail{background:rgba(229,57,53,.1);color:#C62828}
+/* MAP VISUAL */
+.map-visual{background:var(--n1);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;min-height:200px;position:relative;overflow:hidden}
+.map-bg{position:absolute;inset:0;background:linear-gradient(135deg,#e8f4f8,#d1e8f0);border-radius:10px}
+.map-grid{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.05) 0,rgba(0,0,0,.05) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0,rgba(0,0,0,.05) 1px,transparent 1px,transparent 40px)}
+.map-pin{position:absolute;text-align:center;transform:translateX(-50%)}
+.map-pin .pin-icon{font-size:22px;display:block}
+.map-pin .pin-lbl{font-size:9px;font-weight:700;background:#fff;padding:1px 5px;border-radius:4px;white-space:nowrap;margin-top:2px}
+.map-distance{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:var(--n7);color:#fff;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700}
 
-/* ── STAT ROW ── */
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
-.stat-box{background:#fff;border-radius:10px;padding:14px;box-shadow:0 2px 10px rgba(10,36,114,.07);text-align:center}
-.stat-val{font-size:26px;font-weight:700;color:#0A2472}
-.stat-lbl{font-size:10px;color:#546E7A;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.action-btn{width:100%;background:var(--n7);color:#fff;border:none;padding:12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s}
+.action-btn:hover{background:var(--n8)}
+.action-btn.green{background:var(--g7)}.action-btn.green:hover{background:#1b5e20}
+.action-btn:disabled{background:#ccc;cursor:not-allowed}
 
-.foot{text-align:center;padding:14px;font-size:10px;color:#7C90B0;background:#fff;border-top:1px solid #DBEAFE;margin-top:4px}
+.mission-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.mi-box{background:var(--n1);border-radius:8px;padding:10px 14px}
+.mi-lbl{font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.mi-val{font-size:14px;font-weight:700;color:var(--n8)}
+.mi-val.red{color:var(--r6)}.mi-val.green{color:var(--g7)}
+
+/* CITY PORTAL */
+.stat-row4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat-box{background:#fff;border-radius:10px;padding:14px;box-shadow:var(--shadow);text-align:center}
+.sv{font-size:26px;font-weight:700;color:var(--n8)}.sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.zone-tbl{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+.zone-tbl th{background:var(--n8);color:#fff;padding:9px 12px;font-size:10px;font-weight:700;text-align:left}
+.zone-tbl td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--n8)}
+.zone-tbl tr:last-child td{border-bottom:none}.zone-tbl tr:nth-child(even) td{background:var(--n1)}
+
+/* RIDER */
+.rider-wrap{max-width:420px;margin:0 auto;padding:20px}
+.rider-map{background:linear-gradient(135deg,#e0f2fe,#b3e5fc);border-radius:14px;height:220px;position:relative;overflow:hidden;margin-bottom:14px}
+.rider-map-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.scooter-pin{text-align:center;cursor:pointer;transition:transform .2s}
+.scooter-pin:hover{transform:scale(1.1)}
+.scooter-pin .sp-icon{font-size:28px;display:block}
+.scooter-pin .sp-batt{font-size:10px;background:#fff;padding:1px 6px;border-radius:8px;margin-top:2px;font-weight:700}
+.rider-panel{background:#fff;border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.rider-step{display:none}.rider-step.active{display:block}
+.rider-title{font-size:16px;font-weight:700;color:var(--n8);margin-bottom:6px}
+.rider-sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+.rider-btn{width:100%;background:var(--n7);color:#fff;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px}
+.rider-btn:hover{background:var(--n8)}
+.rider-btn.outline{background:transparent;color:var(--n7);border:2px solid var(--n7)}
+.star-row{display:flex;gap:8px;margin:10px 0;font-size:28px;cursor:pointer}
+.star{color:#ddd;transition:color .15s}.star.lit{color:#FFC107}
+.ride-timer{font-size:36px;font-weight:700;color:var(--n7);text-align:center;margin:16px 0}
+.unlock-code{background:var(--n2);border-radius:10px;padding:14px;text-align:center;margin-bottom:12px}
+.unlock-code .code{font-size:28px;font-weight:700;letter-spacing:6px;color:var(--n8)}
+.unlock-code .code-lbl{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* MISC */
+.log-box{background:var(--n1);border:1px solid var(--border);border-radius:8px;padding:10px 14px;max-height:140px;overflow-y:auto;font-size:11px;color:var(--muted)}
+.log-entry{padding:3px 0;border-bottom:1px solid var(--border);display:flex;gap:8px}
+.log-entry:last-child{border-bottom:none}
+.log-time{color:var(--n7);font-weight:600;flex-shrink:0}
+.section-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--n6);margin-bottom:8px;margin-top:16px}
+.foot{text-align:center;padding:12px;font-size:10px;color:var(--muted);background:#fff;border-top:1px solid var(--border)}
+.pulse-badge{animation:pulse2 1.5s infinite}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.5}}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <div>
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:14px">
     <div class="logo">FLASH<span>RIDE</span></div>
-    <div class="header-sub">UNIFIED FLEET MANAGEMENT &amp; COMPLIANCE PLATFORM — MVP PROTOTYPE v1.0</div>
+    <div style="width:1px;height:18px;background:rgba(255,255,255,.2)"></div>
+    <div style="font-size:12px;color:rgba(255,255,255,.7)">Unified Fleet Management Platform</div>
   </div>
-  <div class="live-pill"><div class="live-dot"></div>SYNTHETIC DATASET · 1,500 VEHICLES · JAN 2026</div>
+  <div class="tp-right">
+    <div class="live-dot"></div>
+    <div class="dtag">Live Dataset · Jan 2026</div>
+  </div>
 </div>
 
-<!-- ══ HOME — ROLE SELECTION ════════════════════════════════════════════════ -->
-<div id="home-page" class="home-page">
+<!-- HOME -->
+<div id="home-page">
   <div class="home-title">Select your role to enter the system</div>
-  <div class="home-sub">FlashRide operates 5,000 vehicles across 15 zones in Riverton. This platform replaces spreadsheets and WhatsApp with automated fleet intelligence.</div>
+  <div class="home-sub">Actions you take update the live dataset. Changes are reflected across all portals in real time.</div>
   <div class="role-grid">
-
-    <div class="role-card" onclick="enterPortal('ops')">
+    <div class="role-card" onclick="enter('ops')">
       <div class="role-icon">📊</div>
       <div class="role-name">Operations Manager</div>
-      <div class="role-desc">Monitor the full fleet in real time, view KPI dashboards, manage vehicle status, simulate Mission Triggers, and track zone distribution</div>
+      <div class="role-desc">Monitor fleet, trigger missions, and track completion status across all 15 zones</div>
       <button class="role-btn">Enter Portal →</button>
     </div>
-
-    <div class="role-card" onclick="enterPortal('tech')">
+    <div class="role-card" onclick="enter('tech')">
       <div class="role-icon">🔧</div>
       <div class="role-name">Field Technician</div>
-      <div class="role-desc">View your auto-assigned missions, accept tasks with GPS drift visibility, navigate to vehicles, and mark service complete</div>
+      <div class="role-desc">Receive auto-assigned missions, navigate to vehicle, swap battery, mark complete</div>
       <button class="role-btn">Enter App →</button>
     </div>
-
-    <div class="role-card" onclick="enterPortal('city')">
+    <div class="role-card" onclick="enter('city')">
       <div class="role-icon">🏛️</div>
       <div class="role-name">City Official</div>
-      <div class="role-desc">Access live compliance reports, equity zone coverage, and regulatory status — auto-generated from fleet data</div>
+      <div class="role-desc">View live equity zone compliance, coverage reports, and ADA status</div>
       <button class="role-btn">Enter Portal →</button>
     </div>
-
+    <div class="role-card" onclick="enter('rider')">
+      <div class="role-icon">🛵</div>
+      <div class="role-name">Rider</div>
+      <div class="role-desc">Find a scooter, unlock it, take a ride, and rate your experience</div>
+      <button class="role-btn">Open App →</button>
+    </div>
   </div>
 </div>
 
-<!-- ══ OPERATIONS MANAGER PORTAL ════════════════════════════════════════════ -->
+<!-- OPS MANAGER -->
 <div id="portal-ops" class="inner-page">
   <div class="page-header">
-    <button class="back-btn" onclick="goHome()">← Back to Home</button>
-    <div class="page-header-title">FlashRide — Operations Manager</div>
+    <button class="back-btn" onclick="goHome()">← Home</button>
+    <div class="page-header-title">Operations Manager</div>
+    <div class="kpi-live-badge pulse-badge">● LIVE DATASET</div>
   </div>
-  <div class="portal-tabs">
-    <div class="ptab active" onclick="switchPTab('ops','monitor',this)">Fleet Monitor</div>
-    <div class="ptab" onclick="switchPTab('ops','trigger',this)">Mission Trigger</div>
-    <div class="ptab" onclick="switchPTab('ops','analysis',this)">Data Analysis</div>
+  <div class="ptabs">
+    <button class="ptab active" onclick="switchTab('ops','analysis',this)">📊 Data Analysis</button>
+    <button class="ptab" onclick="switchTab('ops','missions',this)">⚡ Mission Trigger</button>
   </div>
 
-  <!-- FLEET MONITOR -->
-  <div id="ops-monitor" class="ppage active">
-    <div class="stat-row">
-      <div class="stat-box"><div class="stat-val" style="color:#0A2472">1,500</div><div class="stat-lbl">Total Fleet · 15 Zones</div></div>
-      <div class="stat-box"><div class="stat-val" style="color:#1565C0">422</div><div class="stat-lbl">Available (Va, Batt≥20%)</div></div>
-      <div class="stat-box"><div class="stat-val" style="color:#E53935">1,078</div><div class="stat-lbl">Unavailable Vehicles</div></div>
-      <div class="stat-box"><div class="stat-val" style="color:#E53935">484</div><div class="stat-lbl">Low Battery (&lt;20%)</div></div>
-      <div class="stat-box"><div class="stat-val" style="color:#F57F17">127</div><div class="stat-lbl">Ghost Vehicles (Drift>10m)</div></div>
-    </div>
-    <div class="kpi-row">
-      <div class="kpi-card kpi-red">
-        <div class="kpi-num-lbl">KPI 1</div>
-        <div class="kpi-title">Fleet Availability Rate</div>
-        <div class="kpi-value">28.1<span class="u">%</span></div>
-        <div class="kpi-formula">FAR = Va / Vt × 100 = 422 / 1,500</div>
-        <div class="kpi-badge badge-red">⚠ Below 95% target</div>
-      </div>
-      <div class="kpi-card kpi-blue">
-        <div class="kpi-num-lbl">KPI 2</div>
-        <div class="kpi-title">Avg Response Time</div>
-        <div class="kpi-value">18.1<span class="u">min</span></div>
-        <div class="kpi-formula">ART = Σ Technician_Search_Time / N</div>
-        <div class="kpi-badge badge-blue">✓ Within 30 min target</div>
-      </div>
-      <div class="kpi-card kpi-amber">
-        <div class="kpi-num-lbl">KPI 3</div>
-        <div class="kpi-title">Avg Customer Rating</div>
-        <div class="kpi-value">3.83<span class="u">★</span></div>
-        <div class="kpi-formula">ACR = Σ Customer_Rating / N</div>
-        <div class="kpi-badge badge-amber">⚠ Below 4.2★ target</div>
-      </div>
-      <div class="kpi-card kpi-red">
-        <div class="kpi-num-lbl">Unavailable</div>
-        <div class="kpi-title">Fleet Unavailability</div>
-        <div class="kpi-value">1,078</div>
-        <div class="kpi-formula">Vt − Va = 1,500 − 422</div>
-        <div class="kpi-badge badge-red">⚠ 71.9% unavailable</div>
-      </div>
-      <div class="kpi-card kpi-red">
-        <div class="kpi-num-lbl">Compliance</div>
-        <div class="kpi-title">Equity Zone Coverage</div>
-        <div class="kpi-value">67<span class="u">%</span></div>
-        <div class="kpi-formula">5 of 7 equity zones below minimum</div>
-        <div class="kpi-badge badge-red">⚠ Below 80% target</div>
-      </div>
-    </div>
-    <div class="charts-3">
-      <div class="ccard">
-        <div class="ctitle">KPI 1 — Fleet Availability Rate (FAR %) by Zone</div>
-        <div class="csub">FAR per Zone_ID · Dashed = 95% target · Red = critical zones</div>
-        <div style="height:240px;position:relative"><canvas id="m-far"></canvas></div>
-      </div>
-      <div class="ccard">
-        <div class="ctitle">Fleet downtime by cause</div>
-        <div class="csub">% of 1,500 records · Low Battery is the primary fixable cause</div>
-        <div style="height:240px;position:relative"><canvas id="m-downtime"></canvas></div>
-      </div>
-      <div class="ccard">
-        <div class="ctitle">Vehicle status</div>
-        <div class="csub">Vehicle_Status breakdown from dataset</div>
-        <div style="height:240px;position:relative"><canvas id="m-status"></canvas></div>
-      </div>
+  <!-- TAB: DATA ANALYSIS -->
+  <div id="ops-analysis" class="ppage active">
+    <div class="kpi5" id="ops-kpis">
+      <div class="kc bad"><div class="kl">KPI 1 — FAR</div><div class="kv red" id="kpi-far-val">28.1%</div><div class="ks">Va/Vt×100 · Target ≥95%</div><span class="kbadge kb-r" id="kpi-far-badge">⚠ Below target</span></div>
+      <div class="kc ok"><div class="kl">KPI 2 — ART</div><div class="kv blue" id="kpi-art-val">18.1 min</div><div class="ks">Σ Search_Time/N · Target ≤30 min</div><span class="kbadge kb-b">✓ Within target</span></div>
+      <div class="kc bad"><div class="kl">KPI 3 — ACR</div><div class="kv" style="color:var(--am)" id="kpi-acr-val">3.83★</div><div class="ks">Σ Rating/N · Target ≥4.2★</div><span class="kbadge kb-a" id="kpi-acr-badge">⚠ Below target</span></div>
+      <div class="kc ok"><div class="kl">Available (Va)</div><div class="kv blue" id="kpi-avail-val">422</div><div class="ks">Status=Available AND Batt≥20%</div><span class="kbadge kb-b">KPI 1 numerator</span></div>
+      <div class="kc bad"><div class="kl">Unavailable</div><div class="kv red" id="kpi-unavail-val">1,078</div><div class="ks">Vt − Va = 1,500 − 422</div><span class="kbadge kb-r">⚠ 71.9% of fleet</span></div>
     </div>
     <div class="charts-2">
-      <div class="ccard">
-        <div class="ctitle">KPI 2 — Avg technician search time by zone</div>
-        <div class="csub">Technician_Search_Time per zone · Dashed = 30 min target</div>
-        <div style="height:200px;position:relative"><canvas id="m-art"></canvas></div>
-      </div>
-      <div class="ccard">
-        <div class="ctitle">KPI 3 — Customer rating by zone</div>
-        <div class="csub">Customer_Rating per Zone_ID · Dashed = 4.2★ target</div>
-        <div style="height:200px;position:relative"><canvas id="m-acr"></canvas></div>
-      </div>
+      <div class="cc"><div class="ct">KPI 1 — Fleet Availability Rate by zone</div><div class="cs">FAR per zone · Red = below 25% · Dashed = 95% target · Updates when missions complete</div><div style="height:200px;position:relative"><canvas id="oc-far"></canvas></div></div>
+      <div class="cc"><div class="ct">Fleet downtime by cause</div><div class="cs">Defines unavailability · Low battery = largest fixable cause · Updates live</div><div style="height:200px;position:relative"><canvas id="oc-down"></canvas></div></div>
+    </div>
+    <div class="charts-2">
+      <div class="cc"><div class="ct">KPI 3 — Customer rating by battery level</div><div class="cs">Low-battery vehicles rated 3.51★ vs 3.98★ · Fixing KPI 1 fixes KPI 3</div><div style="height:180px;position:relative"><canvas id="oc-batt-rating"></canvas></div></div>
+      <div class="cc"><div class="ct">KPI 2 — Avg technician search time by zone</div><div class="cs">Technician_Search_Time per zone · Dashed = 30 min target</div><div style="height:180px;position:relative"><canvas id="oc-art"></canvas></div></div>
     </div>
   </div>
 
-  <!-- MISSION TRIGGER -->
-  <div id="ops-trigger" class="ppage">
-    <div class="trigger-box">
-      <div class="ctitle" style="margin-bottom:10px">⚡ Auto-Mission Trigger — Solution Demo</div>
-      <p style="font-size:12px;color:#546E7A;margin-bottom:14px">This demonstrates how the system replaces WhatsApp coordination with automated task assignment. When <strong>Battery_Pct_Before_Service &lt; 20%</strong>, the system detects it, creates a mission, and assigns the nearest technician — with zero manual intervention.</p>
-      <div class="step-flow">
-        <div class="step">🔋 Battery drops &lt;20%</div>
-        <div class="step-arrow">→</div>
-        <div class="step">⚡ System detects</div>
-        <div class="step-arrow">→</div>
-        <div class="step">📋 Mission created</div>
-        <div class="step-arrow">→</div>
-        <div class="step">👤 Tech auto-assigned</div>
-        <div class="step-arrow">→</div>
-        <div class="step">✅ Vehicle back online</div>
+  <!-- TAB: MISSION TRIGGER -->
+  <div id="ops-missions" class="ppage">
+    <div class="fleet-wrap">
+      <div class="fleet-toolbar">
+        <div class="fleet-title">Fleet Monitor — Live Mission Status</div>
+        <input type="text" placeholder="Search vehicle or zone..." id="fleet-search" oninput="filterFleet()"/>
+        <select id="fleet-filter" onchange="filterFleet()">
+          <option value="">All Status</option>
+          <option value="Low Battery">Low Battery</option>
+          <option value="Mission Active">Mission Active</option>
+          <option value="Available">Available</option>
+          <option value="Completed">Completed</option>
+        </select>
+        <span class="fleet-count" id="fleet-count">Showing 15 vehicles</span>
       </div>
-      <button class="trigger-btn" onclick="simulateTrigger()">⚡ Simulate Low Battery Event</button>
-      <div class="trigger-log" id="trigger-log"><div style="font-size:11px;color:#7C90B0;padding:8px">System standing by — press button to simulate a battery event.</div></div>
-    </div>
-
-    <div class="ccard">
-      <div class="ctitle">Active Mission Queue</div>
-      <div class="csub" style="margin-bottom:12px">Auto-assigned missions currently pending or in progress</div>
       <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:11px">
-          <thead><tr style="background:#0A2472;color:#fff">
-            <th style="padding:8px 12px;text-align:left">Vehicle</th>
-            <th style="padding:8px 12px;text-align:left">Issue</th>
-            <th style="padding:8px 12px;text-align:left">Mission</th>
-            <th style="padding:8px 12px;text-align:left">Assigned To</th>
-            <th style="padding:8px 12px;text-align:left">Status</th>
+        <table class="ftbl">
+          <thead><tr>
+            <th>Vehicle ID</th><th>Zone</th><th>Battery %</th><th>Location</th>
+            <th>Assigned Technician</th><th>Mission Status</th>
+            <th>Completed By</th><th>On Time?</th><th>GPS Drift</th><th>Action</th>
           </tr></thead>
-          <tbody>
-            <tr style="border-bottom:1px solid #DBEAFE"><td style="padding:8px 12px">V0003</td><td style="padding:8px 12px;color:#E53935">Battery 19%</td><td style="padding:8px 12px">Battery Swap</td><td style="padding:8px 12px">T18</td><td style="padding:8px 12px"><span class="pill warn">Pending</span></td></tr>
-            <tr style="border-bottom:1px solid #DBEAFE;background:#EFF6FF"><td style="padding:8px 12px">V0009</td><td style="padding:8px 12px;color:#E53935">Battery 7%</td><td style="padding:8px 12px">Battery Swap</td><td style="padding:8px 12px">T12</td><td style="padding:8px 12px"><span class="pill warn">Pending</span></td></tr>
-            <tr style="border-bottom:1px solid #DBEAFE"><td style="padding:8px 12px">V0013</td><td style="padding:8px 12px;color:#E53935">Damaged</td><td style="padding:8px 12px">Repair</td><td style="padding:8px 12px">T16</td><td style="padding:8px 12px"><span class="pill ok">In Progress</span></td></tr>
-            <tr style="border-bottom:1px solid #DBEAFE;background:#EFF6FF"><td style="padding:8px 12px">V0028</td><td style="padding:8px 12px;color:#E53935">Battery 18%</td><td style="padding:8px 12px">Battery Swap</td><td style="padding:8px 12px">T08</td><td style="padding:8px 12px"><span class="pill warn">Pending</span></td></tr>
-            <tr style="border-bottom:1px solid #DBEAFE"><td style="padding:8px 12px">V0073</td><td style="padding:8px 12px;color:#F57F17">GPS Drift 18m</td><td style="padding:8px 12px">Relocate</td><td style="padding:8px 12px">T17</td><td style="padding:8px 12px"><span class="pill warn">Pending</span></td></tr>
-          </tbody>
+          <tbody id="fleet-tbody"></tbody>
         </table>
       </div>
     </div>
-  </div>
-
-  <!-- DATA ANALYSIS -->
-  <div id="ops-analysis" class="ppage">
-    <div class="charts-2">
-      <div class="ccard">
-        <div class="ctitle">KPI 3 — Customer rating by battery level</div>
-        <div class="csub">Low battery vehicles (Batt&lt;20%) rated 3.51★ vs 3.98★ — proves KPI 1 drives KPI 3</div>
-        <div style="height:220px;position:relative"><canvas id="a-batt-rating"></canvas></div>
-      </div>
-      <div class="ccard">
-        <div class="ctitle">Vehicle count vs demand by zone type</div>
-        <div class="csub">Downtown has fewest vehicles (463) but highest demand (68%) — critical mismatch</div>
-        <div style="height:220px;position:relative"><canvas id="a-zone"></canvas></div>
-      </div>
-    </div>
-    <div class="ccard chart-full">
-      <div class="ctitle">GPS drift vs technician search time — Before vs After</div>
-      <div class="csub">Ghost vehicles (Drift&gt;10m) search time drops from 42 → 25 min with GPS flagging before dispatch</div>
-      <div style="height:220px;position:relative"><canvas id="a-gps"></canvas></div>
-    </div>
+    <div class="section-label" style="margin-top:18px">Activity log</div>
+    <div class="log-box" id="ops-log"><div class="log-entry"><span class="log-time">System</span><span>Platform initialized. Monitoring 15 vehicles across 15 zones.</span></div></div>
   </div>
 </div>
 
-<!-- ══ FIELD TECHNICIAN PORTAL ══════════════════════════════════════════════ -->
+<!-- FIELD TECHNICIAN -->
 <div id="portal-tech" class="inner-page">
   <div class="page-header">
-    <button class="back-btn" onclick="goHome()">← Back to Home</button>
-    <div class="page-header-title">FlashRide — Field Technician — T08</div>
+    <button class="back-btn" onclick="goHome()">← Home</button>
+    <div class="page-header-title">Field Technician — T08 · Zone Downtown</div>
+    <div class="kpi-live-badge pulse-badge">● LIVE</div>
   </div>
-  <div class="portal-tabs">
-    <div class="ptab active" onclick="switchPTab('tech','missions',this)">My Missions</div>
-    <div class="ptab" onclick="switchPTab('tech','complete',this)">Mark Complete</div>
-  </div>
+  <div style="padding:16px 24px;max-width:680px;margin:0 auto">
 
-  <!-- MISSIONS -->
-  <div id="tech-missions" class="ppage active">
-    <div class="stat-row" style="grid-template-columns:repeat(3,1fr);max-width:600px">
-      <div class="stat-box"><div class="stat-val" style="color:#0A2472">3</div><div class="stat-lbl">Assigned</div></div>
-      <div class="stat-box"><div class="stat-val" style="color:#1565C0">0</div><div class="stat-lbl">Completed</div></div>
-      <div class="stat-box"><div class="stat-val" style="color:#1565C0">4 min</div><div class="stat-lbl">Avg Search Time</div></div>
+    <!-- NOTIFICATION -->
+    <div id="tech-notif" class="notif-panel">
+      <div class="notif-icon">🔔</div>
+      <div class="notif-text"><strong>New Mission Assigned — AUTO-TRIGGERED</strong><span id="notif-detail">Vehicle V0003 · Zone Z02 · Battery 8% · Low_Battery_Flag = 1</span></div>
+      <button class="notif-accept" onclick="acceptMission()">Accept Mission</button>
     </div>
-    <p style="font-size:12px;color:#546E7A;margin-bottom:16px">✓ You are logged in as Technician T08 — Zone Downtown. 3 missions auto-assigned to you today. <strong>No WhatsApp needed</strong> — the system assigned these automatically based on your zone and GPS proximity.</p>
-    <div class="mission-list" id="mission-list"></div>
-  </div>
 
-  <!-- COMPLETE -->
-  <div id="tech-complete" class="ppage">
-    <div class="ccard" style="max-width:520px">
-      <div class="ctitle" style="margin-bottom:12px">Mark Mission Complete</div>
-      <p style="font-size:12px;color:#546E7A;margin-bottom:16px">Update vehicle status after servicing — fleet dashboard updates instantly.</p>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div>
-          <label style="font-size:11px;font-weight:700;color:#0A2472;margin-bottom:4px;display:block">Vehicle ID</label>
-          <input id="complete-vid" type="text" placeholder="e.g. V0003" style="width:100%;padding:8px 12px;border:1px solid #BBDEFB;border-radius:6px;font-size:12px"/>
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:700;color:#0A2472;margin-bottom:4px;display:block">Mission Type Completed</label>
-          <select id="complete-type" style="width:100%;padding:8px 12px;border:1px solid #BBDEFB;border-radius:6px;font-size:12px">
-            <option>Battery Swap</option><option>Repair</option><option>Relocation</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:700;color:#0A2472;margin-bottom:4px;display:block">Battery after service (%)</label>
-          <input id="complete-batt" type="number" placeholder="e.g. 90" min="0" max="100" style="width:100%;padding:8px 12px;border:1px solid #BBDEFB;border-radius:6px;font-size:12px"/>
-        </div>
-        <button onclick="submitComplete()" style="background:#0A2472;color:#fff;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">✓ Submit Mission Complete</button>
+    <div id="tech-notif-waiting" style="display:none;background:var(--g1);border:1px solid var(--g7);border-radius:10px;padding:14px;margin-bottom:14px;font-size:13px;color:var(--g7);font-weight:600">
+      ✓ No new missions. Standby — system will auto-assign when a vehicle triggers the 20% threshold.
+    </div>
+
+    <!-- MISSION FLOW -->
+    <div class="mission-flow" id="tech-mission-card" style="display:none">
+      <div class="mf-header">
+        <div class="mf-header-title">Mission M-4021 — Battery Swap</div>
+        <div class="mf-header-sub" id="mf-timer">Mission started — complete within 30 min to meet KPI 2 target</div>
       </div>
-      <div id="complete-log" style="margin-top:14px"></div>
+      <div class="mf-body">
+        <div class="steps-row" id="steps-row">
+          <div class="step-item active" id="step-1"><span class="step-num">1</span>Accept</div>
+          <div class="step-item" id="step-2"><span class="step-num">2</span>Navigate</div>
+          <div class="step-item" id="step-3"><span class="step-num">3</span>Search</div>
+          <div class="step-item" id="step-4"><span class="step-num">4</span>Swap</div>
+          <div class="step-item" id="step-5"><span class="step-num">5</span>Complete</div>
+        </div>
+
+        <div class="mission-info-grid">
+          <div class="mi-box"><div class="mi-lbl">Vehicle ID</div><div class="mi-val">V0003</div></div>
+          <div class="mi-box"><div class="mi-lbl">Zone</div><div class="mi-val">Z02 · Midtown</div></div>
+          <div class="mi-box"><div class="mi-lbl">Battery Level</div><div class="mi-val red">8% ⚠ Low_Battery_Flag = 1</div></div>
+          <div class="mi-box"><div class="mi-lbl">GPS Drift</div><div class="mi-val" id="gps-drift-display">2.1m ✓ Low drift</div></div>
+          <div class="mi-box"><div class="mi-lbl">Mission Type</div><div class="mi-val">Battery Swap</div></div>
+          <div class="mi-box"><div class="mi-lbl">Dispatch Mode</div><div class="mi-val">System Auto ⚡</div></div>
+        </div>
+
+        <!-- MAP VISUAL -->
+        <div class="map-visual" id="tech-map">
+          <div class="map-bg"></div>
+          <div class="map-grid"></div>
+          <div class="map-pin" style="left:45%;top:60%" id="vehicle-pin">
+            <span class="pin-icon">🛴</span>
+            <span class="pin-lbl">V0003 · 8%</span>
+          </div>
+          <div class="map-pin" style="left:25%;top:35%" id="tech-pin">
+            <span class="pin-icon">🧑‍🔧</span>
+            <span class="pin-lbl">You · T08</span>
+          </div>
+          <div class="map-distance" id="map-dist">1.2 km away · ~4 min drive</div>
+        </div>
+
+        <!-- STEP ACTIONS -->
+        <div id="flow-step-1">
+          <button class="action-btn" onclick="flowStep(2)">🗺️ Start Navigation to Vehicle</button>
+        </div>
+        <div id="flow-step-2" style="display:none">
+          <div style="background:var(--am1);border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:#8a4a00">
+            <strong>GPS Note:</strong> Drift = 2.1m — within normal range. Vehicle should be at listed location.
+          </div>
+          <button class="action-btn" onclick="flowStep(3)">🔍 Arrived — Search for Vehicle</button>
+        </div>
+        <div id="flow-step-3" style="display:none">
+          <div style="background:var(--n2);border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:var(--n8)">
+            Vehicle found at parking stand. Battery at 8%. Swap kit ready.
+          </div>
+          <button class="action-btn" onclick="flowStep(4)">🔋 Begin Battery Swap</button>
+        </div>
+        <div id="flow-step-4" style="display:none">
+          <div style="background:var(--n1);border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:var(--muted)">
+            Swapping battery... New battery at 92%. Vehicle health check: ✓ GPS ✓ Brakes ✓ Lights
+          </div>
+          <button class="action-btn green" onclick="completeMission()">✅ Mark Mission Complete</button>
+        </div>
+        <div id="flow-step-5" style="display:none">
+          <div style="background:var(--g1);border:1px solid var(--g7);border-radius:8px;padding:14px;text-align:center">
+            <div style="font-size:24px;margin-bottom:8px">✅</div>
+            <div style="font-size:14px;font-weight:700;color:var(--g7)">Mission Complete!</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:6px" id="complete-summary">V0003 · Battery now 92% · Dataset updated · Manager view refreshed</div>
+          </div>
+          <div class="section-label" style="margin-top:14px">What updated in the dataset</div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:11px;display:flex;flex-direction:column;gap:4px">
+            <div>🔄 <b>Vehicle_Status</b>: Low Battery → <span style="color:var(--g7)">Available</span></div>
+            <div>🔄 <b>Battery_Pct_Before_Service</b>: 8% → <span style="color:var(--g7)">92%</span></div>
+            <div>🔄 <b>Low_Battery_Flag</b>: 1 → <span style="color:var(--g7)">0</span></div>
+            <div>🔄 <b>Mission_Status</b>: Active → <span style="color:var(--g7)">Completed</span></div>
+            <div>🔄 <b>Completed_By</b>: — → <span style="color:var(--g7)">T08</span></div>
+            <div>🔄 <b>On_Time_Flag</b>: — → <span style="color:var(--g7)" id="ontime-result">1 (Completed in 7 min ✓)</span></div>
+            <div>🔄 <b>KPI 1 FAR</b>: 28.1% → <span style="color:var(--g7)" id="kpi1-updated">recalculating...</span></div>
+            <div>🔄 <b>KPI 3 ACR</b>: 3.83★ → <span style="color:var(--g7)" id="kpi3-updated">recalculating...</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:6px">My mission history</div>
+    <div style="background:#fff;border-radius:10px;box-shadow:var(--shadow);overflow:hidden">
+      <table class="ftbl">
+        <thead><tr><th>Mission ID</th><th>Vehicle</th><th>Type</th><th>Time Taken</th><th>On Time</th><th>Status</th></tr></thead>
+        <tbody id="tech-history"></tbody>
+      </table>
     </div>
   </div>
 </div>
 
-<!-- ══ CITY COMPLIANCE PORTAL ════════════════════════════════════════════════ -->
+<!-- CITY OFFICIAL -->
 <div id="portal-city" class="inner-page">
   <div class="page-header">
-    <button class="back-btn" onclick="goHome()">← Back to Home</button>
-    <div class="page-header-title">FlashRide — City Official — Riverton</div>
+    <button class="back-btn" onclick="goHome()">← Home</button>
+    <div class="page-header-title">City Official — Riverton Compliance Portal</div>
+    <div class="kpi-live-badge pulse-badge">● AUTO-UPDATES</div>
   </div>
-  <div class="portal-tabs">
-    <div class="ptab active" onclick="switchPTab('city','compliance',this)">Compliance Report</div>
-    <div class="ptab" onclick="switchPTab('city','equity',this)">Equity Zones</div>
-  </div>
-
-  <!-- COMPLIANCE -->
-  <div id="city-compliance" class="ppage active">
-    <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
-      <div class="kpi-card kpi-amber"><div class="kpi-num-lbl">Parking</div><div class="kpi-title">Parking Compliance</div><div class="kpi-value">84<span class="u">%</span></div><div class="kpi-badge badge-amber">⚠ Target: 90%</div></div>
-      <div class="kpi-card kpi-red"><div class="kpi-num-lbl">Equity</div><div class="kpi-title">Equity Coverage</div><div class="kpi-value">67<span class="u">%</span></div><div class="kpi-badge badge-red">⚠ Target: 80%</div></div>
-      <div class="kpi-card kpi-amber"><div class="kpi-num-lbl">Response</div><div class="kpi-title">Avg Response Time</div><div class="kpi-value">89<span class="u">min</span></div><div class="kpi-badge badge-amber">⚠ Target: 60 min</div></div>
-      <div class="kpi-card kpi-amber"><div class="kpi-num-lbl">Complaints</div><div class="kpi-title">City Complaints</div><div class="kpi-value">1.4<span class="u">avg</span></div><div class="kpi-badge badge-amber">Per vehicle avg</div></div>
+  <div style="padding:16px 24px">
+    <div class="stat-row4">
+      <div class="stat-box"><div class="sv" style="color:var(--r6)" id="city-coverage">67%</div><div class="sl">Equity Coverage</div><div style="font-size:10px;color:var(--r6);margin-top:4px">Target: 80%</div></div>
+      <div class="stat-box"><div class="sv" style="color:var(--am)">84%</div><div class="sl">Parking Compliance</div><div style="font-size:10px;color:var(--am);margin-top:4px">Target: 90%</div></div>
+      <div class="stat-box"><div class="sv" style="color:var(--am)">89 min</div><div class="sl">Avg Response Time</div><div style="font-size:10px;color:var(--am);margin-top:4px">Target: 60 min</div></div>
+      <div class="stat-box"><div class="sv" style="color:var(--r6)" id="city-zones-fail">5</div><div class="sl">Zones Below Minimum</div><div style="font-size:10px;color:var(--r6);margin-top:4px">Of 7 equity zones</div></div>
     </div>
-    <div class="charts-2" style="margin-bottom:18px">
-      <div class="ccard">
-        <div class="ctitle">Equity zone vehicle count vs city minimum</div>
-        <div class="csub">Red = shortfall zones — system auto-flags for rebalancing</div>
-        <div style="height:220px;position:relative"><canvas id="c-equity-chart"></canvas></div>
-      </div>
-      <div class="ccard">
-        <div class="ctitle">Parking compliance by zone type</div>
-        <div class="csub">Downtown at 71% — below the 85% city requirement</div>
-        <div style="height:220px;position:relative"><canvas id="c-parking"></canvas></div>
-      </div>
+    <div class="cc" style="margin-bottom:14px">
+      <div class="ct">Equity zone compliance — auto-updates when missions complete</div>
+      <div class="cs">Required minimum = 110 vehicles per equity zone · Red = below minimum · Updates when manager triggers rebalancing</div>
+      <table class="zone-tbl" style="margin-top:10px">
+        <thead><tr><th>Zone</th><th>Type</th><th>Current Vehicles</th><th>Required Min</th><th>Gap</th><th>Status</th></tr></thead>
+        <tbody id="equity-tbody"></tbody>
+      </table>
     </div>
-    <table class="zone-table">
-      <thead><tr>
-        <th>Zone</th><th>Type</th><th>Equity</th><th>Vehicles</th><th>Required</th><th>KPI 1 — FAR</th><th>KPI 3 — ACR</th><th>Status</th>
-      </tr></thead>
-      <tbody id="compliance-tbody"></tbody>
-    </table>
-  </div>
-
-  <!-- EQUITY -->
-  <div id="city-equity" class="ppage">
-    <div class="stat-row" style="grid-template-columns:repeat(3,1fr);max-width:600px">
-      <div class="stat-box"><div class="stat-val" style="color:#0A2472">7</div><div class="stat-lbl">Total Equity Zones</div></div>
-      <div class="stat-box"><div class="stat-val" style="color:#E53935">5</div><div class="stat-lbl">Below Minimum</div></div>
-      <div class="stat-box"><div class="stat-val" style="color:#F57F17">67%</div><div class="stat-lbl">Avg Coverage</div></div>
+    <div class="charts-2">
+      <div class="cc"><div class="ct">Vehicle count vs high demand % by zone type</div><div class="cs">Downtown mismatch: 463 vehicles, 68% demand</div><div style="height:200px;position:relative"><canvas id="city-zone-chart"></canvas></div></div>
+      <div class="cc"><div class="ct">Parking compliance by zone type</div><div class="cs">Downtown at 71% — below 85% requirement</div><div style="height:200px;position:relative"><canvas id="city-parking-chart"></canvas></div></div>
     </div>
-    <p style="font-size:12px;color:#E53935;font-weight:600;margin-bottom:16px">⚠ 5 of 7 equity zones are below the minimum vehicle requirement. The system has flagged these for rebalancing.</p>
-    <table class="zone-table">
-      <thead><tr><th>Zone</th><th>Type</th><th>Current</th><th>Required</th><th>Gap</th><th>Action</th></tr></thead>
-      <tbody id="equity-tbody"></tbody>
-    </table>
   </div>
 </div>
 
-<div class="foot">FlashRide Unified Fleet Management Platform &nbsp;|&nbsp; Frontend Prototype — Synthetic Dataset (1,500 records, Jan 2026) &nbsp;|&nbsp; IS 5960 · Saint Louis University · Dr. Tatiana Cardona</div>
+<!-- RIDER -->
+<div id="portal-rider" class="inner-page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goHome()">← Home</button>
+    <div class="page-header-title">FlashRide — Rider App</div>
+  </div>
+  <div class="rider-wrap">
+    <div class="rider-map">
+      <div class="rider-map-inner" style="position:relative;width:100%;height:100%">
+        <!-- City grid lines -->
+        <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.3) 0,rgba(255,255,255,.3) 1px,transparent 1px,transparent 50px),repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0,rgba(255,255,255,.3) 1px,transparent 1px,transparent 50px)"></div>
+        <!-- Scooters on map -->
+        <div class="scooter-pin" style="position:absolute;left:30%;top:40%" onclick="selectScooter('V0044',82)">
+          <span class="sp-icon">🛴</span><div class="sp-batt" style="color:var(--g7)">82% ✓</div>
+        </div>
+        <div class="scooter-pin" style="position:absolute;left:55%;top:55%" onclick="selectScooter('V0056',74)">
+          <span class="sp-icon">🛴</span><div class="sp-batt" style="color:var(--g7)">74% ✓</div>
+        </div>
+        <div class="scooter-pin" style="position:absolute;left:70%;top:30%" onclick="selectScooter('V0089',65)">
+          <span class="sp-icon">🛴</span><div class="sp-batt" style="color:var(--am)">65%</div>
+        </div>
+        <div class="scooter-pin" style="position:absolute;left:45%;top:25%;opacity:.4;cursor:not-allowed">
+          <span class="sp-icon">🛴</span><div class="sp-batt" style="color:var(--r6)">8% ✗</div>
+        </div>
+        <!-- Rider location -->
+        <div style="position:absolute;left:48%;top:52%;font-size:20px">📍</div>
+        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:4px 12px;border-radius:12px">Tap a green scooter to select</div>
+      </div>
+    </div>
+
+    <div class="rider-panel">
+      <!-- STEP 0: SELECT -->
+      <div class="rider-step active" id="rider-step-0">
+        <div class="rider-title">Find a scooter</div>
+        <div class="rider-sub">3 available near you · 1 being serviced (battery being swapped now)</div>
+        <div style="background:var(--n1);border-radius:10px;padding:12px 14px;margin-bottom:12px">
+          <div style="font-size:12px;font-weight:700;color:var(--n8);margin-bottom:6px">Low-battery scooter (V0003)</div>
+          <div style="font-size:11px;color:var(--g7)">⚡ Auto-mission triggered · Technician T08 en route · Battery swap in progress · Will be available soon</div>
+        </div>
+        <button class="rider-btn" id="unlock-btn" style="opacity:.5;cursor:not-allowed" disabled>Select a scooter on the map to continue</button>
+      </div>
+
+      <!-- STEP 1: UNLOCK -->
+      <div class="rider-step" id="rider-step-1">
+        <div class="rider-title" id="rider-vehicle-title">V0044 Selected</div>
+        <div class="rider-sub" id="rider-vehicle-sub">Battery: 82% · 0.3 km away · Est. cost: $2.50</div>
+        <div class="unlock-code"><div class="code">4821</div><div class="code-lbl">Enter this code on the scooter to unlock</div></div>
+        <button class="rider-btn" onclick="unlockScooter()">🔓 Unlock Scooter</button>
+        <button class="rider-btn outline" onclick="riderStep(0)">← Choose Different</button>
+      </div>
+
+      <!-- STEP 2: RIDING -->
+      <div class="rider-step" id="rider-step-2">
+        <div class="rider-title">Ride in progress 🛴</div>
+        <div class="rider-sub">Stay safe · Follow traffic rules · Helmet recommended</div>
+        <div class="ride-timer" id="ride-timer">0:00</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div class="mi-box"><div class="mi-lbl">Battery</div><div class="mi-val green" id="ride-batt">82%</div></div>
+          <div class="mi-box"><div class="mi-lbl">Speed</div><div class="mi-val">12 km/h</div></div>
+        </div>
+        <button class="rider-btn" style="background:var(--r6)" onclick="endRide()">🏁 End Ride</button>
+      </div>
+
+      <!-- STEP 3: RATE -->
+      <div class="rider-step" id="rider-step-3">
+        <div class="rider-title">Rate your ride</div>
+        <div class="rider-sub" id="rider-rate-sub">Vehicle was available and charged. How was your experience?</div>
+        <div class="star-row" id="star-row">
+          <span class="star" onclick="rateStar(1)">★</span>
+          <span class="star" onclick="rateStar(2)">★</span>
+          <span class="star" onclick="rateStar(3)">★</span>
+          <span class="star" onclick="rateStar(4)">★</span>
+          <span class="star" onclick="rateStar(5)">★</span>
+        </div>
+        <div id="rider-rating-note" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
+        <button class="rider-btn" id="submit-rating-btn" onclick="submitRating()" disabled style="opacity:.5">Submit Rating</button>
+      </div>
+
+      <!-- STEP 4: DONE -->
+      <div class="rider-step" id="rider-step-4">
+        <div style="text-align:center;padding:10px 0">
+          <div style="font-size:36px;margin-bottom:8px">🎉</div>
+          <div style="font-size:16px;font-weight:700;color:var(--n8);margin-bottom:4px">Thanks for riding!</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px" id="rider-final-msg">Your rating has been recorded in the dataset.</div>
+          <div style="background:var(--n1);border-radius:8px;padding:10px;font-size:11px;text-align:left;margin-bottom:12px">
+            <div style="font-weight:700;color:var(--n8);margin-bottom:5px">Dataset updated:</div>
+            <div>🔄 <b>Customer_Rating</b>: → <span style="color:var(--g7)" id="rider-rating-display">—</span></div>
+            <div>🔄 <b>KPI 3 ACR</b>: recalculated with your rating</div>
+            <div>🔄 <b>Ride_Duration_Minutes</b>: logged</div>
+          </div>
+          <button class="rider-btn" onclick="riderStep(0)">Find Another Scooter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">FlashRide Unified Fleet Management Platform · IS 5960 · Saint Louis University · Dr. Tatiana Cardona · Synthetic Dataset · 1,500 records · Jan 2026 · Frontend Prototype</div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
-var zones=['Z01','Z02','Z03','Z04','Z05','Z06','Z07','Z08','Z09','Z10','Z11','Z12','Z13','Z14','Z15'];
-var farData=[37.5,21.4,30.4,28.6,21.4,44.4,20.7,16.0,18.2,18.2,45.0,7.7,39.1,36.8,45.0];
-var artData=[14.9,15.4,18.1,17.2,16.7,17.1,20.1,26.2,19.3,15.0,16.2,17.0,15.6,19.9,21.1];
-var acrData=[3.93,3.74,3.67,3.84,4.28,3.58,3.95,3.85,4.21,3.88,4.10,3.31,3.59,3.63,3.87];
-var ghostData=[3,6,4,2,6,2,3,7,7,3,5,0,1,2,8];
-var zoneType={Z01:'Residential',Z02:'Campus',Z03:'Downtown',Z04:'Residential',Z05:'Downtown',Z06:'Downtown',Z07:'Campus',Z08:'Downtown',Z09:'Campus',Z10:'Residential',Z11:'Residential',Z12:'Downtown',Z13:'Residential',Z14:'Campus',Z15:'Residential'};
+// ═══════════════════════════════════════════════════════════════════════
+// LIVE DATASET — shared across all portals
+// ═══════════════════════════════════════════════════════════════════════
+var DB = {
+  vehicles: [
+    {id:'V0003',zone:'Z02',battery:8, status:'Low Battery',location:'Midtown Park',tech:'T08',mission:'Pending',completedBy:null,onTime:null,drift:2.1,flag:1},
+    {id:'V0009',zone:'Z09',battery:7, status:'Low Battery',location:'Campus South',tech:null,  mission:'Unassigned',completedBy:null,onTime:null,drift:5.8,flag:1},
+    {id:'V0013',zone:'Z12',battery:91,status:'In Use',    location:'Main Street',  tech:null,  mission:'N/A',completedBy:null,onTime:null,drift:3.2,flag:0},
+    {id:'V0028',zone:'Z05',battery:18,status:'Low Battery',location:'City Center',  tech:'T12', mission:'Active',completedBy:null,onTime:null,drift:1.4,flag:1},
+    {id:'V0044',zone:'Z08',battery:82,status:'Available', location:'North Ave',    tech:null,  mission:'N/A',completedBy:null,onTime:null,drift:7.2,flag:0},
+    {id:'V0056',zone:'Z14',battery:74,status:'Available', location:'River Walk',   tech:null,  mission:'N/A',completedBy:null,onTime:null,drift:4.1,flag:0},
+    {id:'V0073',zone:'Z15',battery:45,status:'Available', location:'West End',     tech:null,  mission:'N/A',completedBy:null,onTime:null,drift:18.5,flag:0},
+    {id:'V0089',zone:'Z01',battery:65,status:'Available', location:'Park North',   tech:null,  mission:'N/A',completedBy:null,onTime:null,drift:3.0,flag:0},
+    {id:'V0101',zone:'Z06',battery:11,status:'Low Battery',location:'East Side',   tech:'T19', mission:'Active',completedBy:null,onTime:null,drift:2.8,flag:1},
+    {id:'V0115',zone:'Z03',battery:88,status:'Available', location:'Old Town',     tech:null,  mission:'N/A',completedBy:null,onTime:null,drift:1.1,flag:0},
+    {id:'V0132',zone:'Z11',battery:54,status:'Available', location:'University',   tech:null,  mission:'N/A',completedBy:null,onTime:null,drift:6.3,flag:0},
+    {id:'V0147',zone:'Z07',battery:5, status:'Low Battery',location:'South Hub',   tech:null,  mission:'Unassigned',completedBy:null,onTime:null,drift:4.5,flag:1},
+    {id:'V0163',zone:'Z04',battery:79,status:'Damaged',   location:'West Park',    tech:'T05', mission:'Repair',completedBy:null,onTime:null,drift:9.1,flag:0},
+    {id:'V0178',zone:'Z10',battery:92,status:'Available', location:'Harbor View',  tech:null,  mission:'N/A',completedBy:null,onTime:null,drift:2.3,flag:0},
+    {id:'V0192',zone:'Z13',battery:14,status:'Low Battery',location:'Suburb East', tech:null,  mission:'Unassigned',completedBy:null,onTime:null,drift:11.2,flag:1},
+  ],
+  missionStartTime: null,
+  completedMissions: [],
+  riderRatings: [],
+  totalVehicles: 1500,
+  baseAvail: 422,
+  completedCount: 0,
+};
 
-var NV='#0A2472',BL='#1565C0',LBL='#1E88E5',CY='#00B0FF',RD='#E53935',AM='#F57F17',GY='#546E7A';
-Chart.defaults.font.family="'Segoe UI',Arial,sans-serif";
-var GRD={color:'#E3F2FD'};
-var TCK={color:GY,font:{size:10}};
-var NL={plugins:{legend:{display:false}}};
-var WL={plugins:{legend:{display:true,labels:{font:{size:11},boxWidth:12,padding:12}}}};
+var activityLog = [];
+var missionTimer = null;
+var missionSeconds = 0;
+var rideTimer = null;
+var rideSeconds = 0;
+var selectedRating = 0;
+var selectedVehicle = null;
+var missionAccepted = false;
 
-function lineT(v,c){return{type:'line',label:'Target',data:zones.map(function(){return v;}),borderColor:c||RD,borderWidth:2,borderDash:[6,4],pointRadius:0,fill:false,order:1};}
+// ── KPI CALCULATION ──────────────────────────────────────────────────────
+function calcKPIs() {
+  var added = DB.completedCount * 1;
+  var avail = DB.baseAvail + added;
+  var far = (avail / DB.totalVehicles * 100).toFixed(1);
+  var art = Math.max(18.1 - DB.completedCount * 0.8, 16.0).toFixed(1);
+  var acr;
+  // Each completed mission removes one 3.51★ event, adds one 3.98★
+  var base = 3.83;
+  var delta = DB.completedCount * ((3.98 - 3.51) / DB.totalVehicles);
+  acr = Math.min(4.21, (base + delta + DB.riderRatings.reduce(function(s,r){return s+(r-3.83)/1500;},0))).toFixed(2);
+  var unavail = DB.totalVehicles - avail;
+  return { far: parseFloat(far), art: parseFloat(art), acr: parseFloat(acr), avail, unavail };
+}
 
-// ── NAVIGATION ────────────────────────────────────────────────────────────
-function enterPortal(name){
-  document.getElementById('home-page').style.display='none';
+function refreshKPIs() {
+  var kpis = calcKPIs();
+  var farEl = document.getElementById('kpi-far-val');
+  if(farEl) {
+    farEl.textContent = kpis.far + '%';
+    farEl.style.color = kpis.far >= 95 ? 'var(--g7)' : 'var(--r6)';
+    document.getElementById('kpi-art-val').textContent = kpis.art + ' min';
+    document.getElementById('kpi-acr-val').textContent = kpis.acr + '★';
+    document.getElementById('kpi-acr-val').style.color = kpis.acr >= 4.2 ? 'var(--g7)' : 'var(--am)';
+    document.getElementById('kpi-avail-val').textContent = kpis.avail.toLocaleString();
+    document.getElementById('kpi-unavail-val').textContent = kpis.unavail.toLocaleString();
+    var farBadge = document.getElementById('kpi-far-badge');
+    if(farBadge) farBadge.textContent = kpis.far >= 95 ? '✓ Target met' : '⚠ Below target';
+    var acrBadge = document.getElementById('kpi-acr-badge');
+    if(acrBadge) acrBadge.textContent = kpis.acr >= 4.2 ? '✓ Target met' : '⚠ Below target';
+  }
+}
+
+// ── LOG ──────────────────────────────────────────────────────────────────
+function addLog(msg) {
+  var t = new Date().toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  activityLog.unshift({time:t, msg});
+  var lb = document.getElementById('ops-log');
+  if(!lb) return;
+  lb.innerHTML = activityLog.slice(0,12).map(function(l){
+    return '<div class="log-entry"><span class="log-time">'+l.time+'</span><span>'+l.msg+'</span></div>';
+  }).join('');
+}
+
+// ── FLEET TABLE ──────────────────────────────────────────────────────────
+function renderFleet() {
+  var filter = (document.getElementById('fleet-filter')||{}).value || '';
+  var search = ((document.getElementById('fleet-search')||{}).value||'').toLowerCase();
+  var rows = DB.vehicles.filter(function(v){
+    var matchFilter = !filter || v.status.includes(filter) || v.mission.includes(filter);
+    var matchSearch = !search || v.id.toLowerCase().includes(search) || v.zone.toLowerCase().includes(search);
+    return matchFilter && matchSearch;
+  });
+  var tbody = document.getElementById('fleet-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = rows.map(function(v) {
+    var battColor = v.battery < 20 ? 'var(--r6)' : v.battery < 50 ? 'var(--am)' : 'var(--g7)';
+    var battBar = '<div class="batt-bar-wrap"><div class="batt-bar" style="width:'+v.battery+'%;background:'+battColor+'"></div></div> '+v.battery+'%';
+    var statusCls = {
+      'Low Battery':'sp-lowbatt','Available':'sp-avail','Mission Active':'sp-mission',
+      'In Use':'sp-inuse','Completed':'sp-done','Damaged':'sp-lowbatt','Repair':'sp-mission'
+    }[v.status] || 'sp-avail';
+    var missionDisplay = v.mission === 'Pending' ? '<span style="color:var(--am);font-weight:700">⏳ Pending Acceptance</span>' :
+                         v.mission === 'Active'  ? '<span style="color:var(--n7);font-weight:700">🚗 In Progress</span>' :
+                         v.mission === 'Completed' ? '<span style="color:var(--g7);font-weight:700">✅ Done</span>' :
+                         v.mission;
+    var driftDisplay = v.drift > 10 ? '<span style="color:var(--r6);font-weight:600">'+v.drift+'m ⚠ Ghost</span>' : v.drift+'m ✓';
+    var onTimeDisplay = v.onTime === null ? '—' : v.onTime ? '<span style="color:var(--g7);font-weight:600">✓ On time</span>' : '<span style="color:var(--r6);font-weight:600">✗ Late</span>';
+    var actionBtn = (v.status === 'Low Battery' && v.mission === 'Unassigned') ?
+      '<button class="trigger-btn" onclick="manualTrigger(\''+v.id+'\')">Assign Tech</button>' :
+      (v.mission === 'Completed' ? '<span style="color:var(--g7);font-size:10px">✅ Done</span>' : '—');
+    return '<tr><td><b>'+v.id+'</b></td><td>'+v.zone+'</td><td>'+battBar+'</td><td>'+v.location+'</td>'+
+      '<td>'+(v.tech||'—')+'</td><td>'+missionDisplay+'</td>'+
+      '<td>'+(v.completedBy||'—')+'</td><td>'+onTimeDisplay+'</td><td>'+driftDisplay+'</td>'+
+      '<td>'+actionBtn+'</td></tr>';
+  }).join('');
+  var cnt = document.getElementById('fleet-count');
+  if(cnt) cnt.textContent = 'Showing '+rows.length+' vehicles';
+}
+
+function filterFleet() { renderFleet(); }
+
+function manualTrigger(vid) {
+  var v = DB.vehicles.find(function(x){return x.id===vid;});
+  if(!v) return;
+  v.mission = 'Active'; v.tech = 'T' + (Math.floor(Math.random()*20)+1).toString().padStart(2,'0');
+  renderFleet();
+  addLog('Manager manually assigned mission for ' + vid + ' to ' + v.tech);
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────────────────
+function goHome() {
+  document.getElementById('home-page').style.display = 'block';
+  document.querySelectorAll('.inner-page').forEach(function(p){p.classList.remove('active');});
+  clearInterval(missionTimer);
+  clearInterval(rideTimer);
+}
+
+function enter(name) {
+  document.getElementById('home-page').style.display = 'none';
   document.querySelectorAll('.inner-page').forEach(function(p){p.classList.remove('active');});
   document.getElementById('portal-'+name).classList.add('active');
-  if(name==='ops' && !window.chartsBuilt){ buildCharts(); window.chartsBuilt=true; }
+  if(name==='ops') { renderFleet(); refreshKPIs(); buildCharts(); }
+  if(name==='city') { renderEquity(); buildCityCharts(); }
 }
 
-function goHome(){
-  document.getElementById('home-page').style.display='block';
-  document.querySelectorAll('.inner-page').forEach(function(p){p.classList.remove('active');});
-}
-
-function switchPTab(portal, tab, el){
-  var prefix = portal+'-';
-  document.querySelectorAll('#portal-'+portal+' .ptab').forEach(function(t){t.classList.remove('active');});
+function switchTab(portal, tab, el) {
+  document.querySelectorAll('#portal-'+portal+' .ptab').forEach(function(b){b.classList.remove('active');});
   document.querySelectorAll('#portal-'+portal+' .ppage').forEach(function(p){p.classList.remove('active');});
   el.classList.add('active');
-  document.getElementById(prefix+tab).classList.add('active');
+  document.getElementById(portal+'-'+tab).classList.add('active');
+}
+
+// ── TECHNICIAN FLOW ──────────────────────────────────────────────────────
+function acceptMission() {
+  document.getElementById('tech-notif').style.display = 'none';
+  document.getElementById('tech-mission-card').style.display = 'block';
+  missionAccepted = true;
+  DB.missionStartTime = Date.now();
+  missionSeconds = 0;
+  missionTimer = setInterval(function(){
+    missionSeconds++;
+    var m = Math.floor(missionSeconds/60), s = missionSeconds%60;
+    var el = document.getElementById('mf-timer');
+    if(el) el.textContent = 'Time elapsed: '+m+':'+s.toString().padStart(2,'0')+' — KPI 2 target: 30 min';
+  }, 1000);
+  // update V0003 in DB
+  var v = DB.vehicles.find(function(x){return x.id==='V0003';});
+  if(v) { v.mission = 'Active'; v.tech = 'T08'; }
+  renderFleet();
+  addLog('Technician T08 accepted mission M-4021 for V0003');
+  renderHistory();
+}
+
+function flowStep(step) {
+  for(var i=1;i<=5;i++) {
+    var el = document.getElementById('flow-step-'+i);
+    if(el) el.style.display = i===step ? 'block' : 'none';
+    var si = document.getElementById('step-'+i);
+    if(si) {
+      si.className = 'step-item';
+      if(i < step) si.classList.add('done');
+      else if(i === step) si.classList.add('active');
+    }
+  }
+  if(step===2) addLog('T08 navigating to V0003 at Midtown Park');
+  if(step===3) addLog('T08 arrived at V0003 location. Vehicle located.');
+  if(step===4) addLog('T08 beginning battery swap on V0003');
+  renderFleet();
+}
+
+function completeMission() {
+  clearInterval(missionTimer);
+  var elapsed = Math.round(missionSeconds/60*10)/10;
+  var onTime = elapsed <= 30;
+  flowStep(5);
+
+  // Update dataset
+  var v = DB.vehicles.find(function(x){return x.id==='V0003';});
+  if(v) {
+    v.battery = 92; v.status = 'Available'; v.mission = 'Completed';
+    v.completedBy = 'T08'; v.onTime = onTime; v.flag = 0;
+  }
+  DB.completedCount++;
+  DB.completedMissions.push({id:'M-4021',vid:'V0003',tech:'T08',time:Math.round(missionSeconds)+'s',onTime});
+
+  var kpis = calcKPIs();
+  document.getElementById('kpi1-updated').textContent = kpis.far+'%';
+  document.getElementById('kpi3-updated').textContent = kpis.acr+'★';
+  document.getElementById('ontime-result').textContent = onTime ? '1 (On time ✓ — '+Math.round(elapsed)+' min)' : '0 (Late — '+Math.round(elapsed)+' min)';
+
+  addLog('✅ Mission M-4021 COMPLETE · V0003 battery 92% · T08 · '+(onTime?'On time':'Late'));
+  renderFleet(); refreshKPIs(); renderHistory();
+
+  // tech notif waiting
+  setTimeout(function(){
+    document.getElementById('tech-notif-waiting').style.display = 'block';
+  }, 1000);
+}
+
+function renderHistory() {
+  var tbody = document.getElementById('tech-history');
+  if(!tbody) return;
+  var rows = DB.completedMissions.map(function(m){
+    return '<tr><td>M-4021</td><td>'+m.vid+'</td><td>Battery Swap</td><td>'+m.time+'</td>'+
+      '<td>'+(m.onTime?'<span style="color:var(--g7);font-weight:600">✓ Yes</span>':'<span style="color:var(--r6);font-weight:600">✗ No</span>')+'</td>'+
+      '<td><span class="status-pill sp-done">Completed</span></td></tr>';
+  });
+  if(!rows.length) rows = ['<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:14px">No completed missions yet this session</td></tr>'];
+  tbody.innerHTML = rows.join('');
+}
+
+// ── EQUITY TABLE ─────────────────────────────────────────────────────────
+var equityZones = [
+  {zone:'Z02',type:'Low-income Campus',current:112,required:120,gap:-8},
+  {zone:'Z04',type:'Residential Equity',current:103,required:110,gap:-7},
+  {zone:'Z05',type:'Downtown Underserved',current:79,required:110,gap:-31},
+  {zone:'Z06',type:'Campus Equity',current:95,required:110,gap:-15},
+  {zone:'Z09',type:'Downtown Equity',current:88,required:110,gap:-22},
+  {zone:'Z11',type:'Residential Equity',current:91,required:110,gap:-19},
+  {zone:'Z13',type:'Campus Low-income',current:107,required:110,gap:-3},
+];
+
+function renderEquity() {
+  var tbody = document.getElementById('equity-tbody');
+  if(!tbody) return;
+  var below = equityZones.filter(function(z){return z.current+DB.completedCount*2 < z.required;}).length;
+  var cityFail = document.getElementById('city-zones-fail');
+  if(cityFail) cityFail.textContent = below;
+  var cov = Math.round(67 + DB.completedCount * 2);
+  var covEl = document.getElementById('city-coverage');
+  if(covEl) { covEl.textContent = cov+'%'; covEl.style.color = cov>=80?'var(--g7)':'var(--r6)'; }
+
+  tbody.innerHTML = equityZones.map(function(z){
+    var adj = z.current + DB.completedCount*2;
+    var gap = adj - z.required;
+    var ok = adj >= z.required;
+    return '<tr><td><b>'+z.zone+'</b></td><td>'+z.type+'</td><td style="font-weight:600;color:'+(ok?'var(--g7)':'var(--r6)')+'">'+adj+'</td><td>'+z.required+'</td>'+
+      '<td style="color:'+(ok?'var(--g7)':'var(--r6)')+';font-weight:600">'+(gap>=0?'+'+gap:gap)+'</td>'+
+      '<td><span class="status-pill '+(ok?'sp-avail':'sp-lowbatt')+'">'+(ok?'✓ Compliant':'✗ Below Min')+'</span></td></tr>';
+  }).join('');
+}
+
+// ── RIDER FLOW ────────────────────────────────────────────────────────────
+function riderStep(n) {
+  for(var i=0;i<=4;i++) {
+    var el = document.getElementById('rider-step-'+i);
+    if(el) el.className = 'rider-step' + (i===n?' active':'');
+  }
+}
+
+function selectScooter(vid, batt) {
+  selectedVehicle = {id:vid, battery:batt};
+  document.getElementById('rider-vehicle-title').textContent = vid+' Selected';
+  document.getElementById('rider-vehicle-sub').textContent = 'Battery: '+batt+'% · 0.3 km away · Est. cost: $2.50';
+  riderStep(1);
+}
+
+function unlockScooter() {
+  addLog('Rider unlocked '+selectedVehicle.id+' · Battery: '+selectedVehicle.battery+'%');
+  rideSeconds = 0;
+  riderStep(2);
+  document.getElementById('ride-batt').textContent = selectedVehicle.battery + '%';
+  rideTimer = setInterval(function(){
+    rideSeconds++;
+    var m=Math.floor(rideSeconds/60), s=rideSeconds%60;
+    var el=document.getElementById('ride-timer');
+    if(el) el.textContent=m+':'+s.toString().padStart(2,'0');
+    var battEl=document.getElementById('ride-batt');
+    if(battEl) battEl.textContent=Math.max(selectedVehicle.battery-Math.floor(rideSeconds/60),5)+'%';
+  },1000);
+}
+
+function endRide() {
+  clearInterval(rideTimer);
+  var mins = Math.ceil(rideSeconds/60)||1;
+  var finalBatt = Math.max(selectedVehicle.battery - mins, 5);
+  addLog('Rider ended ride on '+selectedVehicle.id+' · Duration: '+mins+' min · Battery: '+finalBatt+'%');
+  // Update vehicle
+  var v = DB.vehicles.find(function(x){return x.id===selectedVehicle.id;});
+  if(v) { v.battery = finalBatt; if(finalBatt<20){v.status='Low Battery';v.flag=1;} }
+  var sub = 'Battery after your ride: '+finalBatt+'%';
+  if(finalBatt<20) sub += ' — ⚡ Auto-mission will be triggered! Technician being assigned now.';
+  document.getElementById('rider-rate-sub').textContent = sub;
+  renderFleet(); refreshKPIs();
+  riderStep(3);
+}
+
+function rateStar(n) {
+  selectedRating = n;
+  document.querySelectorAll('#star-row .star').forEach(function(s,i){
+    s.classList.toggle('lit', i<n);
+  });
+  var notes = ['','Very bad experience','Could be better','Okay ride','Good ride!','Excellent! Perfect scooter!'];
+  document.getElementById('rider-rating-note').textContent = notes[n];
+  document.getElementById('submit-rating-btn').disabled = false;
+  document.getElementById('submit-rating-btn').style.opacity = '1';
+}
+
+function submitRating() {
+  DB.riderRatings.push(selectedRating);
+  var kpis = calcKPIs();
+  document.getElementById('rider-rating-display').textContent = selectedRating+'★';
+  document.getElementById('rider-final-msg').textContent = 'Your '+selectedRating+'★ rating has been recorded. Fleet ACR updated to '+kpis.acr+'★';
+  addLog('Rider rated '+selectedVehicle.id+' → '+selectedRating+'★ · New fleet ACR: '+kpis.acr+'★');
+  refreshKPIs();
+  riderStep(4);
 }
 
 // ── CHARTS ────────────────────────────────────────────────────────────────
+var zones=['Z01','Z02','Z03','Z04','Z05','Z06','Z07','Z08','Z09','Z10','Z11','Z12','Z13','Z14','Z15'];
+var farData=[37.5,21.4,30.4,28.6,21.4,44.4,20.7,16.0,18.2,18.2,45.0,7.7,39.1,36.8,45.0];
+var artData=[14.9,15.4,18.1,17.2,16.7,17.1,20.1,26.2,19.3,15.0,16.2,17.0,15.6,19.9,21.1];
+var NV='#0A2472',BL='#1565C0',RD='#E53935',AM='#F57F17',GY='#546E7A',CY='#00B0FF';
+var GRD={color:'#E3F2FD'};
+var TCK={color:GY,font:{size:9}};
+Chart.defaults.font.family="'Segoe UI',Arial,sans-serif";
+Chart.defaults.plugins.tooltip.backgroundColor=NV;
+
+var chartsBuilt=false;
 function buildCharts(){
+  if(chartsBuilt) return;
+  chartsBuilt=true;
+
   // FAR by zone
-  new Chart(document.getElementById('m-far'),{type:'bar',data:{labels:zones,datasets:[
-    {label:'FAR (%)',data:farData,backgroundColor:farData.map(function(v){return v>=40?BL:v>=25?LBL:RD;}),borderRadius:3,order:2},
-    lineT(95,RD)
-  ]},options:{responsive:true,maintainAspectRatio:false,...WL,scales:{x:{grid:{display:false},ticks:{color:GY,font:{size:9}}},y:{grid:GRD,ticks:{color:GY,font:{size:10},callback:function(v){return v+'%';}},min:0,max:100}}}});
+  new Chart(document.getElementById('oc-far'),{type:'bar',data:{labels:zones,datasets:[
+    {label:'FAR (%)',data:farData,backgroundColor:farData.map(function(v){return v>=40?BL:v>=25?'#42A5F5':RD;}),borderRadius:3,order:2},
+    {type:'line',label:'Target 95%',data:zones.map(function(){return 95;}),borderColor:RD,borderWidth:2,borderDash:[5,4],pointRadius:0,fill:false,order:1}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:10}}},scales:{x:{grid:{display:false},ticks:TCK},y:{grid:GRD,ticks:{color:GY,font:{size:9},callback:function(v){return v+'%';}},min:0,max:100}}}});
 
   // Downtime
-  new Chart(document.getElementById('m-downtime'),{type:'doughnut',data:{
+  new Chart(document.getElementById('oc-down'),{type:'doughnut',data:{
     labels:['Low Battery 32.3%','Unavailability 37.5%','Damaged 22.1%','GPS Issues 8%'],
-    datasets:[{data:[32.3,37.5,22.1,8.0],backgroundColor:[RD,NV,BL,LBL],borderWidth:2,borderColor:'#fff'}]
-  },options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:8}}}}});
+    datasets:[{data:[32.3,37.5,22.1,8.0],backgroundColor:[RD,NV,'#1E88E5','#42A5F5'],borderWidth:2,borderColor:'#fff'}]
+  },options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:9},padding:8,boxWidth:9}}}}});
 
-  // Status
-  new Chart(document.getElementById('m-status'),{type:'doughnut',data:{
-    labels:['Available (Va=422)','Low Battery (484)','Damaged (332)','In Use (262)'],
-    datasets:[{data:[422,484,332,262],backgroundColor:[BL,RD,LBL,CY],borderWidth:2,borderColor:'#fff'}]
-  },options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:8}}}}});
+  // Battery rating
+  new Chart(document.getElementById('oc-batt-rating'),{type:'bar',data:{
+    labels:['Low Battery\n(Flag=1)','Normal Battery\n(Flag=0)'],
+    datasets:[{data:[3.51,3.98],backgroundColor:[RD,BL],borderRadius:4}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:GY,font:{size:10}}},y:{grid:GRD,ticks:{color:GY,font:{size:9},callback:function(v){return v+'★';}},min:3,max:5}}}});
 
-  // ART
-  new Chart(document.getElementById('m-art'),{type:'bar',data:{labels:zones,datasets:[
-    {label:'Avg Search Time (min)',data:artData,backgroundColor:artData.map(function(v){return v>22?RD:BL;}),borderRadius:3,order:2},
-    lineT(30,RD)
-  ]},options:{responsive:true,maintainAspectRatio:false,...WL,scales:{x:{grid:{display:false},ticks:{color:GY,font:{size:9}}},y:{grid:GRD,ticks:TCK,min:0,max:35}}}});
+  // ART by zone
+  new Chart(document.getElementById('oc-art'),{type:'bar',data:{labels:zones,datasets:[
+    {label:'Avg Search Time (min)',data:artData,backgroundColor:artData.map(function(v){return v>22?RD:'#1E88E5';}),borderRadius:3,order:2},
+    {type:'line',label:'Target 30 min',data:zones.map(function(){return 30;}),borderColor:RD,borderWidth:2,borderDash:[5,4],pointRadius:0,fill:false,order:1}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{font:{size:9},boxWidth:9}}},scales:{x:{grid:{display:false},ticks:{color:GY,font:{size:9}}},y:{grid:GRD,ticks:TCK,min:0,max:35}}}});
+}
 
-  // ACR
-  new Chart(document.getElementById('m-acr'),{type:'bar',data:{labels:zones,datasets:[
-    {label:'Avg Rating (★)',data:acrData,backgroundColor:acrData.map(function(v){return v>=4.2?BL:v>=3.7?LBL:RD;}),borderRadius:3,order:2},
-    lineT(4.2,RD)
-  ]},options:{responsive:true,maintainAspectRatio:false,...WL,scales:{x:{grid:{display:false},ticks:{color:GY,font:{size:9}}},y:{grid:GRD,ticks:{color:GY,font:{size:10},callback:function(v){return v+'★';}},min:1,max:5}}}});
-
-  // Rating by battery
-  new Chart(document.getElementById('a-batt-rating'),{type:'bar',data:{
-    labels:['Low Battery (<20%)','Normal Battery (≥20%)'],
-    datasets:[{data:[3.51,3.98],backgroundColor:[RD,BL],borderRadius:5}]
-  },options:{responsive:true,maintainAspectRatio:false,...NL,scales:{x:{grid:{display:false},ticks:TCK},y:{grid:GRD,ticks:{color:GY,font:{size:10},callback:function(v){return v+'★';}},min:3,max:5}}}});
-
-  // Zone demand
-  new Chart(document.getElementById('a-zone'),{type:'bar',data:{
+var cityChartsBuilt=false;
+function buildCityCharts(){
+  if(cityChartsBuilt) return;
+  cityChartsBuilt=true;
+  new Chart(document.getElementById('city-zone-chart'),{type:'bar',data:{
     labels:['Campus','Residential','Downtown'],
-    datasets:[
-      {label:'Vehicle Count',data:[528,509,463],backgroundColor:BL,borderRadius:4},
-      {label:'High Demand %',data:[42,38,68],backgroundColor:RD,borderRadius:4}
-    ]
-  },options:{responsive:true,maintainAspectRatio:false,...WL,scales:{x:{grid:{display:false},ticks:TCK},y:{grid:GRD,ticks:TCK}}}});
-
-  // GPS before/after
-  new Chart(document.getElementById('a-gps'),{type:'bar',data:{
-    labels:['Low drift (0-5m)','Medium drift (5-10m)','Ghost Vehicle (>10m)'],
-    datasets:[
-      {label:'Before (no GPS flagging)',data:[15,28,42],backgroundColor:'rgba(229,57,53,.4)',borderRadius:4},
-      {label:'After (GPS drift shown before dispatch)',data:[12,18,25],backgroundColor:BL,borderRadius:4}
-    ]
-  },options:{responsive:true,maintainAspectRatio:false,...WL,scales:{x:{grid:{display:false},ticks:TCK},y:{grid:GRD,ticks:{color:GY,font:{size:10},callback:function(v){return v+' min';}}}}}});
-
-  // Equity chart
-  new Chart(document.getElementById('c-equity-chart'),{type:'bar',data:{
-    labels:['Z02','Z04','Z05','Z06','Z09','Z11','Z13'],
-    datasets:[
-      {label:'Actual Vehicles',data:[112,103,79,95,88,91,107],backgroundColor:'rgba(229,57,53,.5)',borderRadius:4},
-      {label:'Required Minimum',data:[120,110,110,110,110,110,110],backgroundColor:NV,borderRadius:4}
-    ]
-  },options:{responsive:true,maintainAspectRatio:false,...WL,scales:{x:{grid:{display:false},ticks:TCK},y:{grid:GRD,ticks:TCK,min:60,max:140}}}});
-
-  // Parking
-  new Chart(document.getElementById('c-parking'),{type:'bar',data:{
+    datasets:[{label:'Vehicle Count',data:[528,509,463],backgroundColor:BL,borderRadius:4},{label:'High Demand %',data:[42,38,68],backgroundColor:RD,borderRadius:4}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:10}}},scales:{x:{grid:{display:false},ticks:TCK},y:{grid:GRD,ticks:TCK}}}});
+  new Chart(document.getElementById('city-parking-chart'),{type:'bar',data:{
     labels:['Campus','Residential','Downtown'],
-    datasets:[{data:[88,91,71],backgroundColor:[BL,LBL,RD],borderRadius:5}]
-  },options:{responsive:true,maintainAspectRatio:false,...NL,scales:{x:{grid:{display:false},ticks:TCK},y:{grid:GRD,ticks:{color:GY,font:{size:10},callback:function(v){return v+'%';}},min:0,max:100}}}});
+    datasets:[{data:[88,91,71],backgroundColor:[BL,'#1E88E5',RD],borderRadius:4}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:TCK},y:{grid:GRD,ticks:{color:GY,font:{size:9},callback:function(v){return v+'%';}},min:0,max:100}}}});
 }
 
-// ── COMPLIANCE TABLE ──────────────────────────────────────────────────────
-var zoneDetails={
-  Z01:{vehicles:98,required:80,far:37.5,acr:3.93,equity:false},
-  Z02:{vehicles:112,required:120,far:21.4,acr:3.74,equity:true},
-  Z03:{vehicles:87,required:100,far:30.4,acr:3.67,equity:false},
-  Z04:{vehicles:103,required:110,far:28.6,acr:3.84,equity:true},
-  Z05:{vehicles:79,required:110,far:21.4,acr:4.28,equity:true},
-  Z06:{vehicles:95,required:110,far:44.4,acr:3.58,equity:true},
-  Z07:{vehicles:108,required:80,far:20.7,acr:3.95,equity:false},
-  Z08:{vehicles:91,required:80,far:16.0,acr:3.85,equity:false},
-  Z09:{vehicles:88,required:110,far:18.2,acr:4.21,equity:true},
-  Z10:{vehicles:120,required:80,far:18.2,acr:3.88,equity:false},
-  Z11:{vehicles:91,required:110,far:45.0,acr:4.10,equity:true},
-  Z12:{vehicles:72,required:100,far:7.7,acr:3.31,equity:false},
-  Z13:{vehicles:107,required:110,far:39.1,acr:3.59,equity:true},
-  Z14:{vehicles:95,required:80,far:36.8,acr:3.63,equity:false},
-  Z15:{vehicles:112,required:80,far:45.0,acr:3.87,equity:false}
-};
-var tbody=document.getElementById('compliance-tbody');
-zones.forEach(function(z){
-  var d=zoneDetails[z];
-  var ok=d.vehicles>=d.required;
-  var farCls=d.far>=40?'ok':d.far>=20?'warn':'fail';
-  var acrCls=d.acr>=4.2?'ok':d.acr>=3.7?'warn':'fail';
-  tbody.innerHTML+='<tr><td><strong>'+z+'</strong></td><td>'+zoneType[z]+'</td><td>'+(d.equity?'Yes':'No')+'</td><td>'+d.vehicles+'</td><td>'+d.required+'</td><td><span class="pill '+farCls+'">'+d.far+'%</span></td><td><span class="pill '+acrCls+'">'+d.acr+'★</span></td><td><span class="pill '+(ok?'ok':'fail')+'">'+(ok?'✓ Compliant':'✗ Below Min')+'</span></td></tr>';
-});
-
-var equityZones=[
-  {zone:'Z02',type:'Low-income Campus',current:112,required:120,gap:-8,action:'Rebalance'},
-  {zone:'Z04',type:'Residential Equity',current:103,required:110,gap:-7,action:'Rebalance'},
-  {zone:'Z05',type:'Downtown Underserved',current:79,required:110,gap:-31,action:'Urgent'},
-  {zone:'Z06',type:'Campus Equity',current:95,required:110,gap:-15,action:'Urgent'},
-  {zone:'Z09',type:'Downtown Equity',current:88,required:110,gap:-22,action:'Urgent'},
-  {zone:'Z11',type:'Residential Equity',current:91,required:110,gap:-19,action:'Urgent'},
-  {zone:'Z13',type:'Campus Low-income',current:107,required:110,gap:-3,action:'Monitor'}
-];
-var etbody=document.getElementById('equity-tbody');
-equityZones.forEach(function(e){
-  var cls=e.action==='Urgent'?'fail':e.action==='Rebalance'?'warn':'ok';
-  etbody.innerHTML+='<tr><td><strong>'+e.zone+'</strong></td><td>'+e.type+'</td><td>'+e.current+'</td><td>'+e.required+'</td><td style="color:#E53935;font-weight:600">'+e.gap+'</td><td><span class="pill '+cls+'">'+e.action+'</span></td></tr>';
-});
-
-// ── TECHNICIAN MISSIONS ───────────────────────────────────────────────────
-var missions=[
-  {id:'M-4021',vid:'V0003',zone:'Z02',cause:'Battery 19% — Battery_Pct_Before=19, Low_Battery_Flag=1',drift:'2.1m',status:'pending'},
-  {id:'M-4056',vid:'V0044',zone:'Z09',cause:'Battery 7% — Battery_Pct_Before=7, Ghost_Vehicle_Flag=1',drift:'12m ⚠',status:'pending'},
-  {id:'M-4072',vid:'V0056',zone:'Z14',cause:'Battery 7% — Battery Swap + Relocation',drift:'5.2m',status:'active'}
-];
-function renderMissions(){
-  document.getElementById('mission-list').innerHTML=missions.map(function(m){
-    return '<div class="mission-item"><div class="mission-dot '+m.status+'"></div><div class="mission-info"><div class="mission-id">'+m.id+' — '+m.vid+' | Zone '+m.zone+'</div><div class="mission-detail">'+m.cause+' | GPS Drift: '+m.drift+' | Status: <strong>'+(m.status==='pending'?'Pending':m.status==='active'?'In Progress':'Completed')+'</strong></div></div>'+(m.status==='pending'?'<button class="mbtn accept" onclick="acceptM(\''+m.id+'\')">Accept</button>':m.status==='active'?'<button class="mbtn complete" onclick="completeM(\''+m.id+'\')">Complete</button>':'<button class="mbtn done-btn">✓ Done</button>')+'</div>';
-  }).join('');
-}
-renderMissions();
-function acceptM(id){var m=missions.find(function(x){return x.id===id;});if(m){m.status='active';renderMissions();}}
-function completeM(id){var m=missions.find(function(x){return x.id===id;});if(m){m.status='done';renderMissions();}}
-
-// ── MISSION COMPLETE ──────────────────────────────────────────────────────
-function submitComplete(){
-  var vid=document.getElementById('complete-vid').value;
-  var type=document.getElementById('complete-type').value;
-  var batt=document.getElementById('complete-batt').value;
-  if(!vid||!batt){alert('Please fill in all fields.');return;}
-  document.getElementById('complete-log').innerHTML='<div style="background:#EFF6FF;border-left:3px solid #00B0FF;padding:10px 14px;border-radius:6px;font-size:11px;color:#0A2472;margin-top:4px">✓ Mission complete submitted for <strong>'+vid+'</strong> — '+type+' · Battery after service: <strong>'+batt+'%</strong> · Fleet dashboard updated · '+new Date().toLocaleTimeString()+'</div>';
-  document.getElementById('complete-vid').value='';
-  document.getElementById('complete-batt').value='';
-}
-
-// ── TRIGGER SIMULATOR ─────────────────────────────────────────────────────
-var tc=0;
-var tvids=['V0069','V0103','V0116','V0168','V0201','V0245'];
-var ttechs=['T08 — Rodriguez','T12 — Singh','T19 — Williams','T05 — Chen'];
-var tbatts=['Battery_Pct_Before=7','Battery_Pct_Before=9','Battery_Pct_Before=5','Battery_Pct_Before=6'];
-function simulateTrigger(){
-  tc++;
-  var v=tvids[tc%tvids.length],t=ttechs[tc%ttechs.length],b=tbatts[tc%tbatts.length];
-  var log=document.getElementById('trigger-log');
-  var div=document.createElement('div');
-  div.className='log-item';
-  div.innerHTML='<strong>⚡ Auto-Mission Created</strong> · Vehicle <strong>'+v+'</strong> · <em>'+b+'</em> (Low_Battery_Flag=1)<br><span style="color:#546E7A">→ Assigned: <strong>'+t+'</strong> · Dispatch_Mode: System · Time: '+new Date().toLocaleTimeString()+'</span>';
-  log.prepend(div);
-}
+// Init
+renderFleet();
+renderHistory();
 </script>
 </body>
 </html>
