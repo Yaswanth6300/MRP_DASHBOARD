@@ -377,6 +377,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--n8
             <div>🔄 <b>Completed_By</b>: — → <span style="color:var(--g7)">T08</span></div>
             <div>🔄 <b>On_Time_Flag</b>: — → <span style="color:var(--g7)" id="ontime-result">1 (Completed in 7 min ✓)</span></div>
             <div>🔄 <b>KPI 1 FAR</b>: 28.1% → <span style="color:var(--g7)" id="kpi1-updated">recalculating...</span></div>
+            <div>🔄 <b>KPI 2 ART</b>: 18.1 min → <span style="color:var(--g7)" id="kpi2-updated">recalculating...</span></div>
             <div>🔄 <b>KPI 3 ACR</b>: 3.83★ → <span style="color:var(--g7)" id="kpi3-updated">recalculating...</span></div>
           </div>
         </div>
@@ -565,7 +566,8 @@ function calcKPIs() {
   var added = DB.completedCount * 1;
   var avail = DB.baseAvail + added;
   var far = (avail / DB.totalVehicles * 100).toFixed(1);
-  var art = Math.max(18.1 - DB.completedCount * 0.8, 16.0).toFixed(1);
+  // ART improves as GPS flagging helps — from 18.1 toward ~14 min
+  var art = Math.max(18.1 - DB.completedCount * 0.4, 14.0).toFixed(1);
   var acr;
   // Each completed mission removes one 3.51★ event, adds one 3.98★
   var base = 3.83;
@@ -728,6 +730,7 @@ function completeMission() {
 
   var kpis = calcKPIs();
   document.getElementById('kpi1-updated').textContent = kpis.far+'%';
+  document.getElementById('kpi2-updated').textContent = kpis.art+' min';
   document.getElementById('kpi3-updated').textContent = kpis.acr+'★';
   document.getElementById('ontime-result').textContent = onTime ? '1 (On time ✓ — '+Math.round(elapsed)+' min)' : '0 (Late — '+Math.round(elapsed)+' min)';
 
